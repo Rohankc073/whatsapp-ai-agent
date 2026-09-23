@@ -1,26 +1,83 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --background: #f7f8fa;
+  --surface: #ffffff;
+  --surface-2: #f2f4f7;
+  --foreground: #101828;
+  --muted: #667085;
+  --border: #e4e7ec;
+  --primary: #0e9f6e;
+  --primary-hover: #0b8a5f;
+  --primary-soft: #e7f7f0;
+  --primary-foreground: #ffffff;
+  --danger: #d92d20;
+  --danger-soft: #fef3f2;
+  --warning: #b54708;
+  --warning-soft: #fffaeb;
+  --info: #175cd3;
+  --info-soft: #eff8ff;
+  --bubble-in: #ffffff;
+  --bubble-out: #dcf8e8;
+  --chat-bg: #f0f2f5;
+  --ring: rgba(14, 159, 110, 0.35);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0c0f14;
+    --surface: #141821;
+    --surface-2: #1b202b;
+    --foreground: #eef1f6;
+    --muted: #98a2b3;
+    --border: #262c38;
+    --primary: #22c55e;
+    --primary-hover: #16a34a;
+    --primary-soft: #11281c;
+    --primary-foreground: #06120b;
+    --danger: #f97066;
+    --danger-soft: #2a1414;
+    --warning: #fdb022;
+    --warning-soft: #2a2010;
+    --info: #53b1fd;
+    --info-soft: #0f1d2e;
+    --bubble-in: #1b202b;
+    --bubble-out: #133524;
+    --chat-bg: #0f131a;
+    --ring: rgba(34, 197, 94, 0.35);
   }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-bubble-in: var(--bubble-in);
+  --color-bubble-out: var(--bubble-out);
+  --color-chat-bg: var(--chat-bg);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+  border-color: var(--border);
 }
