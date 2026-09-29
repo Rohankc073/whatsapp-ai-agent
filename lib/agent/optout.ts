@@ -12,5 +12,5 @@ export function optOutIntent(text: string | null): "stop" | "start" | null {
 }
 
 export const OPT_OUT_REPLY =
-  "You've been unsubscribed and won't receive promotional messages from us. You can still message us here anytime — reply START to subscribe again.";
-export const OPT_IN_REPLY = "You're subscribed again. Thanks!";
+  "Done, you won't get any more promotional messages from us. You can still message us here anytime. Reply START if you change your mind.";
+export const OPT_IN_REPLY = "You're back on the list, thanks!";

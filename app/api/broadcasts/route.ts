@@ -1,5 +1,5 @@
 import { after, NextResponse, type NextRequest } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getUser } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { listTemplates } from "@/lib/whatsapp/client";
 import { headerMediaFormat, renderTemplate, templateSlots } from "@/lib/whatsapp/templates";
@@ -22,8 +22,8 @@ interface Body {
 
 export async function POST(req: NextRequest) {
   const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getUser();
-  if (!auth.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const user = await getUser(supabase);
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = (await req.json().catch(() => ({}))) as Body;
   const bad = (error: string) => NextResponse.json({ error }, { status: 400 });
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
         template,
         Object.fromEntries(Object.entries(values).map(([k, v]) => [k, fillTokens(v, recipients[0], nameFallback)]))
       ),
-      created_by: auth.user.id,
+      created_by: user.id,
     })
     .select()
     .single();

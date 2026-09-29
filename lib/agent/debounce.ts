@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-export const DEBOUNCE_MS = Number(process.env.REPLY_DEBOUNCE_MS ?? 4000);
+export const DEBOUNCE_MS = Number(process.env.REPLY_DEBOUNCE_MS ?? 2000);
 
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 

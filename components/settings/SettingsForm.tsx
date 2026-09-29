@@ -84,7 +84,7 @@ export function SettingsForm({
                 <Textarea value={s.persona} onChange={(e) => set("persona", e.target.value)} className="min-h-[140px]" />
               </Field>
             </div>
-            <Field label="OpenAI model" hint={`Leave empty to use the default (${defaultModel}).`}>
+            <Field label="AI model" hint={`Leave empty to use the default (${defaultModel}).`}>
               <Input value={s.model ?? ""} onChange={(e) => set("model", e.target.value)} placeholder={defaultModel} />
             </Field>
           </div>

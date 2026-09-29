@@ -20,8 +20,14 @@ export async function createClient() {
   });
 }
 
-export async function getUser() {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
-  return data.user;
+/**
+ * The signed-in user, verified locally from the session JWT (asymmetric signing keys),
+ * so it costs no round trip to Supabase Auth on each request.
+ */
+export async function getUser(supabase?: Awaited<ReturnType<typeof createClient>>) {
+  const client = supabase ?? (await createClient());
+  const { data } = await client.auth.getClaims();
+  const claims = data?.claims;
+  if (!claims?.sub) return null;
+  return { id: claims.sub, email: typeof claims.email === "string" ? claims.email : undefined };
 }

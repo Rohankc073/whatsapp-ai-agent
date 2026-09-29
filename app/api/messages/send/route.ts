@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getUser } from "@/lib/supabase/server";
 import { sendAndStore } from "@/lib/agent/outbound";
 
 export const runtime = "nodejs";
@@ -7,8 +7,8 @@ export const runtime = "nodejs";
 // Manual reply from the dashboard
 export async function POST(req: NextRequest) {
   const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getUser();
-  if (!auth.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const user = await getUser(supabase);
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { conversationId, text } = (await req.json().catch(() => ({}))) as { conversationId?: string; text?: string };
   const body = text?.trim();

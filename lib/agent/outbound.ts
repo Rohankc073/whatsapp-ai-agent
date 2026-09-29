@@ -17,27 +17,28 @@ export async function sendAndStore(
     console.error("WhatsApp send failed", error);
   }
 
-  const { data, error: dbError } = await supabase
-    .from("messages")
-    .insert({
-      conversation_id: opts.conversationId,
-      direction: "out",
-      sender: opts.sender,
-      body: opts.text,
-      type: "text",
-      wa_message_id: waMessageId,
-      status: error ? "failed" : "sent",
-      error,
-    })
-    .select()
-    .single();
+  const [{ data, error: dbError }] = await Promise.all([
+    supabase
+      .from("messages")
+      .insert({
+        conversation_id: opts.conversationId,
+        direction: "out",
+        sender: opts.sender,
+        body: opts.text,
+        type: "text",
+        wa_message_id: waMessageId,
+        status: error ? "failed" : "sent",
+        error,
+      })
+      .select()
+      .single(),
+    supabase.rpc("touch_conversation", {
+      p_conversation_id: opts.conversationId,
+      p_preview: opts.text,
+      p_inbound: false,
+    }),
+  ]);
   if (dbError) console.error("Failed to store outbound message", dbError);
-
-  await supabase.rpc("touch_conversation", {
-    p_conversation_id: opts.conversationId,
-    p_preview: opts.text,
-    p_inbound: false,
-  });
 
   return { message: data, error };
 }

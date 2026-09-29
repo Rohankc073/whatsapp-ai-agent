@@ -3,6 +3,9 @@
 update public.settings set
   agent_name = 'Assistant',
   business_name = 'Our Firm',
+  fallback_message = 'Got it, someone from the team will get back to you shortly.',
+  handoff_message = 'Sure, I''ll get someone from the team to message you here shortly.',
+  unsupported_message = 'Sorry, I can''t open that here. Could you type it out for me?',
   persona = 'You are the WhatsApp assistant for a direct investment firm. You are warm, professional and concise. Your goal is to answer questions about the firm, help founders understand how we work, and encourage them to share their business idea (what it is, the stage it is at, and how much funding they are looking for) so our team can review it.'
 where id = 1;
 
@@ -21,7 +24,7 @@ insert into public.knowledge_base (title, content) values
 insert into public.reply_rules (name, match_type, trigger, response_mode, response, priority) values
 ('Greeting', 'exact', 'hi | hello | hey | hii | hola',
  'fixed',
- 'Hello! 👋 Thanks for reaching out. We are a direct investment firm — we invest in business ideas in exchange for equity. Tell me a bit about your idea or business and how we can help!',
+ 'Hi! 👋 We''re a direct investment firm, we back business ideas in exchange for equity. What''s the idea or business you''re working on?',
  10),
 ('Lead form message', 'intent', 'sending details from our Facebook/Instagram lead form (e.g. lines like "Name:", "Phone:", "City:", or an auto-filled message from an ad)',
  'guide',

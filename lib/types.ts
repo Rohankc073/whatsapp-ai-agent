@@ -20,6 +20,9 @@ export interface Conversation {
   last_message_at: string;
   last_message_preview: string | null;
   last_inbound_at: string | null;
+  /** "meta_ad" when the chat started from a click-to-WhatsApp ad */
+  source: string | null;
+  ad_headline: string | null;
   created_at: string;
   contact?: Contact;
 }
@@ -34,6 +37,7 @@ export interface Message {
   wa_message_id: string | null;
   status: MessageStatus;
   error: string | null;
+  raw?: unknown;
   created_at: string;
 }
 
@@ -65,6 +69,8 @@ export interface Settings {
   fallback_message: string;
   handoff_message: string;
   unsupported_message: string;
+  lead_message: string;
+  strict_scope: boolean;
 }
 
 export type RecipientStatus = "queued" | "sent" | "delivered" | "read" | "failed" | "skipped";

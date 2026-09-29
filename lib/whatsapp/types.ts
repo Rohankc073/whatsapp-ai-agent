@@ -28,7 +28,8 @@ export interface WaMessage {
     list_reply?: { id: string; title: string; description?: string };
     nfm_reply?: { response_json?: string; body?: string; name?: string };
   };
-  referral?: { headline?: string; body?: string; source_url?: string; source_type?: string };
+  /** Present when the chat was opened from a click-to-WhatsApp ad (Facebook/Instagram). */
+  referral?: { headline?: string; body?: string; source_url?: string; source_type?: string; source_id?: string; ctwa_clid?: string };
 }
 
 export interface WaStatus {

@@ -4,6 +4,7 @@ import type { KnowledgeEntry, ReplyRule, Settings } from "@/lib/types";
 import { matchRules } from "./rules";
 import { buildSystemPrompt } from "./prompt";
 import { generateReply, type ChatTurn } from "./ai";
+import { humanizeReply } from "./humanize";
 
 export interface AgentConfig {
   settings: Settings;
@@ -31,7 +32,12 @@ export type Decision =
  * Decide what to reply to `text` (the customer's latest message(s)).
  * `history` is the conversation so far, ending with the customer's latest message(s).
  */
-export async function decideReply(config: AgentConfig, text: string, history: ChatTurn[]): Promise<Decision> {
+export async function decideReply(
+  config: AgentConfig,
+  text: string,
+  history: ChatTurn[],
+  context: { lead?: boolean } = {}
+): Promise<Decision> {
   const match = matchRules(text, config.rules);
   if (match.fixed) {
     return { kind: "rule", reply: match.fixed.response, rule: match.fixed };
@@ -42,6 +48,7 @@ export async function decideReply(config: AgentConfig, text: string, history: Ch
     knowledge: config.knowledge,
     guides: match.guides,
     intents: match.intents,
+    lead: context.lead,
   });
   const ai = await generateReply({ system, history, model: config.settings.model });
 
@@ -51,6 +58,9 @@ export async function decideReply(config: AgentConfig, text: string, history: Ch
     return { kind: "rule", reply: rule.response, rule };
   }
 
-  const reply = ai.handoff ? config.settings.handoff_message : ai.reply || config.settings.fallback_message;
-  return { kind: "ai", reply, handoff: ai.handoff, rule, guides: match.guides };
+  // No answer from the AI in strict mode means "leave this one for the team".
+  const handoff = ai.handoff || (config.settings.strict_scope && !ai.reply.trim());
+  // An empty handoff message hands over silently (nothing is sent to the customer).
+  const reply = handoff ? config.settings.handoff_message.trim() : humanizeReply(ai.reply) || config.settings.fallback_message;
+  return { kind: "ai", reply, handoff, rule, guides: match.guides };
 }

@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { SettingsForm } from "@/components/settings/SettingsForm";
-import { DEFAULT_MODEL } from "@/lib/agent/ai";
+import { AI_PROVIDER, DEFAULT_MODEL } from "@/lib/agent/ai";
 import type { Settings } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -19,7 +19,8 @@ export default async function SettingsPage() {
     "WhatsApp access token": !!process.env.WHATSAPP_ACCESS_TOKEN,
     "WhatsApp phone number ID": !!process.env.WHATSAPP_PHONE_NUMBER_ID,
     "WhatsApp Business Account ID": !!process.env.WHATSAPP_BUSINESS_ACCOUNT_ID,
-    "OpenAI API key": !!process.env.OPENAI_API_KEY,
+    [AI_PROVIDER === "gemini" ? "Gemini API key" : "OpenAI API key"]:
+      AI_PROVIDER === "gemini" ? !!process.env.GEMINI_API_KEY : !!process.env.OPENAI_API_KEY,
     "Supabase service role key": !!process.env.SUPABASE_SERVICE_ROLE_KEY,
   };
 

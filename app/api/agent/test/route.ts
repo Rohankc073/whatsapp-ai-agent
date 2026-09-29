@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getUser } from "@/lib/supabase/server";
 import { decideReply, loadConfig } from "@/lib/agent/decide";
 import type { ChatTurn } from "@/lib/agent/ai";
 
@@ -8,8 +8,8 @@ export const runtime = "nodejs";
 // "Test the agent" playground — decides a reply without sending anything to WhatsApp.
 export async function POST(req: NextRequest) {
   const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getUser();
-  if (!auth.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const user = await getUser(supabase);
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { message, history = [] } = (await req.json().catch(() => ({}))) as { message?: string; history?: ChatTurn[] };
   if (!message?.trim()) return NextResponse.json({ error: "message is required" }, { status: 400 });

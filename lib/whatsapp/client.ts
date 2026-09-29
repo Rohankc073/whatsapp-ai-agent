@@ -44,6 +44,16 @@ export async function sendText(to: string, text: string): Promise<string> {
   return json.messages?.[0]?.id;
 }
 
+/** Mark an inbound message as read and show "typing…" until we reply (max ~25s). Non-fatal. */
+export async function showTyping(waMessageId: string) {
+  try {
+    await post({ status: "read", message_id: waMessageId, typing_indicator: { type: "text" } });
+  } catch (err) {
+    console.warn("typing indicator failed", err);
+    await markRead(waMessageId);
+  }
+}
+
 /** Mark an inbound message as read (blue ticks). Failures are non-fatal. */
 export async function markRead(waMessageId: string) {
   try {
@@ -91,3 +101,4 @@ export async function listTemplates(): Promise<WaTemplate[]> {
   }
   return templates.filter((t) => t.status === "APPROVED");
 }
+
